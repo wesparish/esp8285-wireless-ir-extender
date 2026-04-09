@@ -63,7 +63,12 @@ jobs:
           EOF
 
       - name: Commit coverage badge
-        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        if: |
+          github.event_name == 'push' && (
+            github.ref == 'refs/heads/main' ||
+            startsWith(github.ref, 'refs/heads/feat-') ||
+            startsWith(github.ref, 'refs/heads/fix-')
+          )
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
