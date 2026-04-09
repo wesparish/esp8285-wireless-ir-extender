@@ -4,14 +4,14 @@
 
 - [PlatformIO Core](https://docs.platformio.org/en/latest/core/installation/index.html) (`pip install platformio`)
 - Two [HiLetgo ESP8285 ESP-01M IR Transceiver modules](https://www.amazon.com/dp/B09KGXNZ2Q)
-- A programmer: [DSD TECH SH-U09G USB-to-serial adapter (FT232RL)](https://www.amazon.com/dp/B083HVM7VZ) — requires jumper wires (see wiring diagram in `docs/ft232rl-programmer-datasheet.md`)
+- A programmer: [DSD TECH SH-U09C5 USB to TTL UART converter cable (FTDI)](https://www.amazon.com/gp/product/B07WX2DSVB/) — requires jumper wires (see wiring diagram in `docs/ft232rl-programmer-datasheet.md`)
 - Enclosure candidate: https://www.printables.com/model/810034-case-for-esp8285-esp-01m-ir-infrared-transmitter-m
 
 ## Programmer Setup
 
 See `docs/ft232rl-programmer-datasheet.md` for the full wiring diagram. Every time you flash (steps 1 and 3):
 
-1. Set the FT232RL voltage jumper to **5V**
+1. Set the FT232RNL voltage selection to **5V**
 2. Wire GND→GND, 5V→5V, TX→RX, RX→TX
 3. Add a jumper from **IO0 to GND** before power-cycling into flash mode
 4. Remove the IO0 jumper and power-cycle after flashing to boot normally

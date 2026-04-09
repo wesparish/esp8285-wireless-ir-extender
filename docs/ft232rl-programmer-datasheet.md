@@ -1,24 +1,24 @@
-# DSD TECH SH-U09G USB-to-Serial Adapter (FT232RL)
+# DSD TECH SH-U09C5 USB to TTL UART Converter Cable (FT232RNL)
 
-Product: [DSD TECH SH-U09G USB to TTL Serial Adapter (FT232RL)](https://www.amazon.com/dp/B083HVM7VZ)
+Product: [DSD TECH SH-U09C5 USB to TTL UART Converter Cable (FTDI)](https://www.amazon.com/gp/product/B07WX2DSVB/)
 
 ## Overview
 
-USB-to-UART adapter using the FTDI FT232RL IC. Used to flash firmware onto the ESP8285 ESP-01M IR transceiver modules via jumper wires. Requires manual IO0→GND wiring to enter download mode (no auto-PROG switch).
+USB-to-UART cable using the FTDI FT232RNL IC. Used to flash firmware onto the ESP8285 ESP-01M IR transceiver modules via jumper wires. Requires manual IO0→GND wiring to enter download mode (no auto-PROG switch).
 
 ## Electrical Specs
 
 | Parameter | Value |
 |-----------|-------|
-| USB-to-UART IC | FT232RL |
-| Output voltage | **3.3V or 5V** — selectable via onboard jumper |
+| USB-to-UART IC | FT232RNL |
+| Output voltage | **1.8V / 2.5V / 3.3V / 5V** — selectable via VCC pin |
 | Logic level | matches selected voltage |
 
-> **Set the voltage jumper to 5V** before connecting to the ESP8285 ESP-01M. The module has an onboard 5V-to-3.3V regulator and requires 5V input. Supplying 3.3V will undervolt the ESP8285 through the regulator's dropout.
+> **Select the 5V VCC pin** before connecting to the ESP8285 ESP-01M. The module has an onboard 5V-to-3.3V regulator and requires 5V input. Supplying 3.3V will undervolt the ESP8285 through the regulator's dropout.
 
 ## Pins Used for ESP8285 Programming
 
-| FT232RL pin | Direction | ESP8285 ESP-01M pin |
+| FT232RNL pin | Direction | ESP8285 ESP-01M pin |
 |-------------|-----------|---------------------|
 | 5V | → | 5V (VCC) |
 | GND | → | GND |
@@ -29,7 +29,7 @@ USB-to-UART adapter using the FTDI FT232RL IC. Used to flash firmware onto the E
 ## Wiring Diagram
 
 ```
-FT232RL adapter          ESP8285 ESP-01M
+FT232RNL cable           ESP8285 ESP-01M
 ┌─────────────┐          ┌──────────────┐
 │          5V ├──────────┤ 5V           │
 │         GND ├────┬─────┤ GND          │

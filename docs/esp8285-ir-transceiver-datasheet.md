@@ -46,7 +46,7 @@ Flash mode procedure:
 
 ## Compatible Programmer
 
-Use the **[DSD TECH SH-U09G FT232RL adapter](https://www.amazon.com/dp/B083HVM7VZ)** with the voltage jumper set to **5V**. See `docs/ft232rl-programmer-datasheet.md` for the full wiring diagram and flash mode procedure.
+Use the **[DSD TECH SH-U09C5 USB to TTL UART converter cable (FTDI)](https://www.amazon.com/gp/product/B07WX2DSVB/)** with the voltage selection set to **5V**. See `docs/ft232rl-programmer-datasheet.md` for the full wiring diagram and flash mode procedure.
 
 > Do not use a programmer that supplies only 3.3V to VCC. The onboard regulator requires more than 3.3V input headroom and will undervolt the ESP8285.
 

@@ -7,7 +7,7 @@ Relay IR remote commands over ESP-NOW between two rooms — no router, no broker
 One **media-node** sits in the media room and captures IR from your remote. It forwards the signal wirelessly to the **server-node** in your server room, which re-transmits it to the AVR receiver. The result is a seamless remote control experience with the AVR physically relocated.
 
 **Hardware:** [HiLetgo ESP8285 ESP-01M IR Transceiver](https://www.amazon.com/dp/B09KGXNZ2Q) × 2  
-**Programmer:** [Wishiot ESP-01S programmer board](https://www.amazon.com/dp/B0CWNFH57W) (recommended) or [DSD TECH SH-U09G FT232RL](https://www.amazon.com/dp/B083HVM7VZ) (requires manual wiring)
+**Programmer:** [DSD TECH SH-U09C5 USB to TTL UART Converter Cable (FTDI)](https://www.amazon.com/gp/product/B07WX2DSVB/) (5V — required for this module; requires manual wiring)
 
 ---
 
