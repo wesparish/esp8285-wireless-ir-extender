@@ -1,0 +1,12 @@
+#pragma once
+
+// ESP-NOW channel — both nodes must use the same value (1–13)
+#define ESPNOW_CHANNEL 1
+
+// MAC address of the PEER node (the other ESP8285).
+// To find a device's MAC: add Serial.println(WiFi.macAddress()) to setup() and
+// open the serial monitor before flashing your real firmware.
+//
+// media-node config.h  →  PEER_MAC_INIT is the server-node's MAC
+// server-node config.h →  PEER_MAC_INIT is the media-node's MAC  (no peer reg needed on slave, but kept symmetric)
+#define PEER_MAC_INIT {0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF}
