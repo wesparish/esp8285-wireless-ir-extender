@@ -1,0 +1,66 @@
+# Architecture
+
+## System Overview
+
+```
+  Media Room                              Server Room
+  ──────────────────────────────────────────────────────
+  [Remote] ──IR──► [media-node]  ···ESP-NOW···  [server-node] ──IR──► [AVR]
+                  ESP8285                        ESP8285
+                  GPIO14 (RX)                    GPIO4 (TX)
+```
+
+The two modules never join a WiFi network. They communicate directly over **ESP-NOW**, Espressif's peer-to-peer MAC-layer protocol, using each other's MAC address. There is no router, broker, or infrastructure dependency.
+
+## ESP-NOW
+
+ESP-NOW operates at the 802.11 MAC layer. After `esp_now_init()` and `wifi_set_channel()`, both devices can exchange up to 250-byte payloads with ~1ms latency using a simple callback model. The media-node is initialized as `ESP_NOW_ROLE_CONTROLLER`; the server-node as `ESP_NOW_ROLE_SLAVE`.
+
+Both nodes call `WiFi.mode(WIFI_STA)` to initialize the radio but never call `WiFi.begin()`. The channel is fixed at compile time via `ESPNOW_CHANNEL` in `config.h`.
+
+## IR Payload
+
+The decoded IR signal is packed into a 16-byte struct (uint32_t + uint16_t + 2-byte padding + uint64_t):
+
+```cpp
+struct IrPayload {
+    uint32_t protocol;  // IRremoteESP8266 decode_type_t
+    uint16_t bits;      // signal bit length
+    uint64_t value;     // decoded IR value
+};
+```
+
+IRremoteESP8266 supports hundreds of protocols. The protocol type is forwarded as-is, so the server-node can call `irSend.send()` with the exact same type/value pair — no protocol-specific handling needed in application code.
+
+## Compile-Time Role Selection
+
+Both `media-node` and `server-node` build from the same `src/main.cpp`. The active code path is selected at compile time via the `NODE_ROLE` build flag:
+
+```ini
+# platformio.ini
+[env:media-node]
+build_flags = -D NODE_ROLE=ROLE_MEDIA
+
+[env:server-node]
+build_flags = -D NODE_ROLE=ROLE_SERVER
+```
+
+`#if NODE_ROLE == ROLE_MEDIA` / `#elif NODE_ROLE == ROLE_SERVER` guards in `main.cpp` ensure only the relevant code is compiled into each binary. A `#error` directive fires at compile time if `NODE_ROLE` is missing.
+
+## Pin Assignments
+
+| Pin    | GPIO | Role |
+|--------|------|------|
+| GPIO14 | 14   | IR receive (media-node) |
+| GPIO4  | 4    | IR transmit (server-node) |
+
+These are hardwired on the ESP-01M IR transceiver module PCB — confirmed by the manufacturer's product documentation. They are not configurable without hardware modification.
+
+## CI/CD
+
+- **Every push/PR**: `build.yml` compiles both environments and uploads `.bin` artifacts
+- **Push to `main`**: `release.yml` runs semantic-release, which reads conventional commits, bumps the version, generates `CHANGELOG.md`, and attaches both firmware binaries to a GitHub release
+
+Firmware binaries are attached to releases as:
+- `firmware-media-node.bin`
+- `firmware-server-node.bin`

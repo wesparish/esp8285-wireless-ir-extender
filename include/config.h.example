@@ -1,0 +1,10 @@
+#pragma once
+
+// ESP-NOW channel — both nodes must use the same value (1–13)
+#define ESPNOW_CHANNEL 1
+
+// MAC addresses of both nodes — run ./bin/get-mac on each device to find them.
+// The same config.h is used for both builds; the firmware selects the correct
+// peer MAC at compile time based on NODE_ROLE.
+#define MEDIA_NODE_MAC {0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF}
+#define SERVER_NODE_MAC {0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF}

@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+# Flash the get-mac firmware to a device and print its MAC address.
+#
+# Usage:
+#   ./bin/get-mac [port]
+#
+# Examples:
+#   ./bin/get-mac                   # auto-detect port
+#   ./bin/get-mac /dev/ttyUSB0
+#   ./bin/get-mac /dev/cu.usbserial-0001
+
+set -euo pipefail
+
+PORT=${1:-}
+UPLOAD_FLAGS=()
+MONITOR_FLAGS=(--baud 115200)
+
+if [[ -n "$PORT" ]]; then
+    UPLOAD_FLAGS+=(--upload-port "$PORT")
+    MONITOR_FLAGS+=(--port "$PORT")
+fi
+
+echo "► Building get-mac firmware..."
+pio run -e get-mac --silent
+
+echo "► Flashing to device..."
+pio run -e get-mac --target upload "${UPLOAD_FLAGS[@]}"
+
+echo ""
+echo "► Reading MAC address — press Ctrl+C once you have it."
+echo ""
+pio device monitor "${MONITOR_FLAGS[@]}"

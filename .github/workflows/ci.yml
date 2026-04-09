@@ -1,0 +1,150 @@
+name: CI
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/pip
+            ~/.platformio/.cache
+          key: ${{ runner.os }}-pio-${{ hashFiles('platformio.ini') }}
+          restore-keys: ${{ runner.os }}-pio-
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install PlatformIO and gcovr
+        run: pip install --upgrade platformio gcovr
+
+      - name: Run unit tests
+        run: pio test -e native
+
+      - name: Run tests with coverage instrumentation
+        run: pio test -e native-coverage
+
+      - name: Generate coverage badge
+        run: |
+          gcovr \
+            --filter 'include/' \
+            --object-directory .pio/build/native-coverage \
+            --json-summary-pretty \
+            -o /tmp/gcovr-summary.json
+          python3 - <<'EOF'
+          import json
+          with open('/tmp/gcovr-summary.json') as f:
+              data = json.load(f)
+          pct = data['line_percent']
+          color = 'brightgreen' if pct >= 90 else ('yellow' if pct >= 75 else 'red')
+          badge = {
+              'schemaVersion': 1,
+              'label': 'coverage',
+              'message': f'{pct:.0f}%',
+              'color': color,
+          }
+          with open('badges/coverage.json', 'w') as f:
+              json.dump(badge, f, indent=2)
+              f.write('\n')
+          print(f'Coverage: {pct:.1f}%')
+          EOF
+
+      - name: Commit coverage badge
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add badges/coverage.json
+          git diff --staged --quiet || (git commit -m "chore: update coverage badge [skip ci]" && git push)
+
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        env: [media-node, server-node]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/pip
+            ~/.platformio/.cache
+          key: ${{ runner.os }}-pio-${{ hashFiles('platformio.ini') }}
+          restore-keys: ${{ runner.os }}-pio-
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install PlatformIO
+        run: pip install --upgrade platformio
+
+      - name: Create config.h from example
+        run: cp include/config.h.example include/config.h
+
+      - name: Build ${{ matrix.env }}
+        run: pio run -e ${{ matrix.env }}
+
+      - name: Upload firmware artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: firmware-${{ matrix.env }}
+          path: .pio/build/${{ matrix.env }}/firmware.bin
+
+  release:
+    needs: [test, build]
+    if: |
+      github.event_name == 'push' && (
+        github.ref == 'refs/heads/main' ||
+        startsWith(github.ref, 'refs/heads/feat-') ||
+        startsWith(github.ref, 'refs/heads/fix-')
+      )
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: true
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "lts/*"
+
+      - name: Download firmware artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: dist
+          pattern: firmware-*
+
+      - name: Flatten artifacts for release
+        run: for d in dist/firmware-*; do mv "$d/firmware.bin" "${d}.bin"; done
+
+      - name: Install semantic-release
+        run: |
+          npm install --save-dev \
+            semantic-release \
+            @semantic-release/commit-analyzer \
+            @semantic-release/release-notes-generator \
+            @semantic-release/changelog \
+            @semantic-release/git \
+            @semantic-release/github \
+            conventional-changelog-conventionalcommits
+
+      - name: Release
+        run: npx semantic-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
