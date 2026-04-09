@@ -1,5 +1,8 @@
 # esp8285-wireless-ir-extender
 
+[![CI](https://github.com/wesparish/esp8285-wireless-ir-extender/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/wesparish/esp8285-wireless-ir-extender/actions/workflows/ci.yml)
+[![Coverage](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/wesparish/esp8285-wireless-ir-extender/main/badges/coverage.json)](https://github.com/wesparish/esp8285-wireless-ir-extender/actions/workflows/ci.yml)
+
 > **Note:** This project is untested — hardware has not been ordered or assembled yet. Expect rough edges.
 
 Relay IR remote commands over ESP-NOW between two rooms — no router, no broker, ~1ms latency.

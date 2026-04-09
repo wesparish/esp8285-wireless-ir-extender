@@ -28,11 +28,47 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Install PlatformIO
-        run: pip install --upgrade platformio
+      - name: Install PlatformIO and gcovr
+        run: pip install --upgrade platformio gcovr
 
       - name: Run unit tests
         run: pio test -e native
+
+      - name: Run tests with coverage instrumentation
+        run: pio test -e native-coverage
+
+      - name: Generate coverage badge
+        run: |
+          gcovr \
+            --filter 'include/' \
+            --object-directory .pio/build/native-coverage \
+            --json-summary-pretty \
+            -o /tmp/gcovr-summary.json
+          python3 - <<'EOF'
+          import json
+          with open('/tmp/gcovr-summary.json') as f:
+              data = json.load(f)
+          pct = data['line_percent']
+          color = 'brightgreen' if pct >= 90 else ('yellow' if pct >= 75 else 'red')
+          badge = {
+              'schemaVersion': 1,
+              'label': 'coverage',
+              'message': f'{pct:.0f}%',
+              'color': color,
+          }
+          with open('badges/coverage.json', 'w') as f:
+              json.dump(badge, f, indent=2)
+              f.write('\n')
+          print(f'Coverage: {pct:.1f}%')
+          EOF
+
+      - name: Commit coverage badge
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add badges/coverage.json
+          git diff --staged --quiet || (git commit -m "chore: update coverage badge [skip ci]" && git push)
 
   build:
     runs-on: ubuntu-latest
