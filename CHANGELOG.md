@@ -1,3 +1,9 @@
+## [1.0.0-feat-initial-creation.2](https://github.com/wesparish/esp8285-wireless-ir-extender/compare/v1.0.0-feat-initial-creation.1...v1.0.0-feat-initial-creation.2) (2026-04-09)
+
+### Bug Fixes
+
+* address Copilot review findings ([fa65a44](https://github.com/wesparish/esp8285-wireless-ir-extender/commit/fa65a44c3069b8788b438e2802f65ce9f00c6250))
+
 ## 1.0.0-feat-initial-creation.1 (2026-04-09)
 
 ### Features
