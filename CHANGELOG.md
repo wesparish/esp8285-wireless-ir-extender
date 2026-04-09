@@ -1,3 +1,9 @@
+## [1.0.0-feat-initial-creation.3](https://github.com/wesparish/esp8285-wireless-ir-extender/compare/v1.0.0-feat-initial-creation.2...v1.0.0-feat-initial-creation.3) (2026-04-09)
+
+### Bug Fixes
+
+* **ci:** fix CI and coverage badges ([afe84bd](https://github.com/wesparish/esp8285-wireless-ir-extender/commit/afe84bda2e7709876e33ee8431500950174ab13d))
+
 ## [1.0.0-feat-initial-creation.2](https://github.com/wesparish/esp8285-wireless-ir-extender/compare/v1.0.0-feat-initial-creation.1...v1.0.0-feat-initial-creation.2) (2026-04-09)
 
 ### Bug Fixes
