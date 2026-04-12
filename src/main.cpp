@@ -306,7 +306,7 @@ void loop() {
         Serial.print(irResult.value, HEX);
         Serial.println();
 
-        char logMsg[LOG_BUF_ENTRY_LEN];
+        char logMsg[LOG_BUF_ENTRY_LEN - LOG_TIMESTAMP_LEN];
         snprintf(logMsg, sizeof(logMsg), "IR rx: %s %u-bit 0x%08X%08X",
             typeToString(irResult.decode_type, irResult.repeat).c_str(),
             irResult.bits,
@@ -385,7 +385,7 @@ void onReceive(uint8_t* /*mac*/, uint8_t* data, uint8_t len) {
             Serial.print(value, HEX);
             Serial.println();
 
-            char logMsg[LOG_BUF_ENTRY_LEN];
+            char logMsg[LOG_BUF_ENTRY_LEN - LOG_TIMESTAMP_LEN];
             snprintf(logMsg, sizeof(logMsg), "IR tx: %s %u-bit 0x%08X%08X",
                 typeToString(static_cast<decode_type_t>(protocol), false).c_str(),
                 bits,
