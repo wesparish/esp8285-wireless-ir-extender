@@ -45,6 +45,14 @@ That's it. Point your remote at the receiver-node and the emitter-node will retr
 
 ---
 
+## Web UI
+
+Each node hosts a built-in diagnostic web UI over Wi-Fi. After flashing, connect to the `IR-Receiver-XXXX` or `IR-Emitter-XXXX` access point (no password) and navigate to `http://192.168.4.1/`. The page auto-refreshes every 5 seconds and shows live counters and an event log.
+
+![Web UI screenshot](docs/web-ui.png)
+
+---
+
 ## Docs
 
 - [Setup Guide](docs/setup.md) — full walkthrough including wiring and verification
