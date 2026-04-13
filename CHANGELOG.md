@@ -1,3 +1,9 @@
+## [1.2.0-feat-irelay-rename.1](https://github.com/wesparish/esp8285-wireless-ir-extender/compare/v1.1.0...v1.2.0-feat-irelay-rename.1) (2026-04-13)
+
+### Features
+
+* rename project to IRelay ([b052eb9](https://github.com/wesparish/esp8285-wireless-ir-extender/commit/b052eb9f40c83e03bb9f101898fd9563608b4029))
+
 ## [1.1.0](https://github.com/wesparish/esp8285-wireless-ir-extender/compare/v1.0.0...v1.1.0) (2026-04-12)
 
 ### Features
